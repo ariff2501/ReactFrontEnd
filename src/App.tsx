@@ -1,82 +1,32 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import Message from './components/Home/Home'
 import Navbar from './components/Navbar/Navbar'  
 import Login from './components/Login/Login'
 import Register from './components/Register/Register'
+import DashboardLayout from './components/DashboardLayout/DashboardLayout'
 import { BrowserRouter as Router,Route, Routes } from 'react-router-dom'
 import './App.css'
+import Home from './components/Home/Home'
+import Profile from './components/Profile/Profile'
 
 
 function App() {
-  // return (
-  //   <Router>
-  //     <div className="container">
-  //       <Routes>
-  //         <Route path="/" element={<Login/>} />
-  //         <Route path="/login" element={<Login />} />
-  //         <Route path="/register" element={<Register />} />
-  //       </Routes>
-  //     </div>
-  //   </Router>
-  // )
   return (
-    <div className="container-fluid vh-100 p-0">
-      <div className="row h-100 g-0">
-        {/* Sidebar */}
-        <div className="col-auto bg-light border-end p-4" style={{ width: '250px' }}>
-          <div className="h-100 border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-muted">
-          <Router>
-              <Navbar />
-            </Router>
-          </div>
-        </div>
-        
-        {/* Header and Main Content Column */}
-        <div className="col d-flex flex-column h-100">
-          {/* Top Utility Bar */}
-          <div className="bg-dark text-white py-2 px-4 d-flex justify-content-end align-items-center">
-            {/* Search Bar */}
-            <div className="me-3">
-              <div className="input-group">
-                <input 
-                  type="text" 
-                  className="form-control form-control-sm" 
-                  placeholder="Search..." 
-                  aria-label="Search"
-                />
-                <button className="btn btn-outline-light btn-sm" type="button">
-                  <i className="bi bi-search"></i>
-                  Search
-                </button>
-              </div>
-            </div>
-            {/* Settings Icon */}
-            <button className="btn btn-link text-white me-3" title="Settings">
-              <i className="bi bi-gear-fill"></i>
-              <span className="ms-1 d-none d-md-inline">Settings</span>
-            </button>
-            {/* Logout Button */}
-            <button className="btn btn-danger btn-sm">
-              <i className="bi bi-box-arrow-right me-1"></i>
-              Logout
-            </button>
-           </div> 
-          {/* Header */}
-          <div className="bg-white border-bottom p-4" style={{ height: '100px' }}>
-            <div className="h-100 border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-muted">
-              Header / Title Area
-            </div>
-          </div>
-          
-          {/* Main Content */}
-          <div className="flex-grow-1 p-4 overflow-auto">
-           
-          </div>
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+
+        {/* Main route uses DashboardLayout as a wrapper */}
+        <Route path="/" element={<DashboardLayout />}>
+          {/* Nested routes inside dashboard */}
+          <Route index element={<Home />} />           
+          <Route path="profile" element={<Profile />} />
+        </Route>
+
+        {/* You can add other non-dashboard routes globally if needed */}
+      </Routes>
+    </Router>
   );
+  
 }
 
 export default App
