@@ -60,12 +60,26 @@
 
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
-import Sidebar from "../Sidebar/Sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import LogoutButton from "../Buttons/LogoutButton";
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Handle "Add Activity" button from navbar
+  const handleAddActivity = () => {
+    // If we're already on the activities page, we'll let the Activities component handle this
+    // Otherwise, navigate to activities page and open the modal
+    if (location.pathname !== '/activities') {
+      navigate('/activities', { state: { openAddModal: true } });
+    } else {
+      // We need to communicate to the Activities component to open the modal
+      // This can be done via context, or by using a custom event
+      window.dispatchEvent(new CustomEvent('openAddActivityModal'));
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -83,7 +97,7 @@ function DashboardLayout() {
       }`}>
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-gray-200">
-            <Navbar />
+            <Navbar onAddActivity={handleAddActivity} />
           </div>
         </div>
       </div>

@@ -82,6 +82,8 @@
 // export default Activities;
 import { useEffect, useState } from "react";
 import { parse, format, isValid } from 'date-fns';
+import { useLocation, useNavigate } from "react-router-dom";
+import ActivityModal from "../ActivityModal/ActivityModal";
 
 interface Activity {
   id: number;
@@ -89,6 +91,10 @@ interface Activity {
   activity_type: string;
   start_date: string;
   end_date: string;
+}
+
+interface LocationState {
+  openAddModal?: boolean;
 }
 
 function formatDate(dateString: string) {
@@ -102,32 +108,81 @@ function formatDate(dateString: string) {
 
 function Activities() {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [filter, setFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState<"date" | "type" | "employee">("date");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("http://localhost:3000/api/activities");
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          throw new Error(errorResponse.message || "Failed to fetch activities.");
-        }
-        const data = await response.json();
-        setActivities(data);
-        console.log("Activities fetched successfully:", data);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Failed to fetch activities. Please try again later.");
-      } finally {
-        setLoading(false);
+  const fetchActivities = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/api/activities");
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || "Failed to fetch activities.");
       }
-    };
-
+      const data = await response.json();
+      setActivities(data);
+      console.log("Activities fetched successfully:", data);
+    } catch (error) {
+      setError( "Failed to fetch activities. Please try again later.");
+      console.error("Error fetching activities:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchActivities();
   }, []);
+
+  useEffect(() => {
+    // Check if we were navigated here with state to open modal
+    const state = location.state as LocationState;
+    if (state?.openAddModal) {
+      setIsModalOpen(true);
+      // Clear the state to prevent reopening on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    
+    // Listen for custom event from DashboardLayout
+    const handleOpenModal = () => {
+      setIsModalOpen(true);
+    };
+    
+    window.addEventListener('openAddActivityModal', handleOpenModal);
+    
+    return () => {
+      window.removeEventListener('openAddActivityModal', handleOpenModal);
+    };
+  }, [location, navigate]);
+  // Handle adding a new activity
+  const handleAddActivity = async (activityData: any) => {
+    try {
+      console.log("Adding activity with data:", activityData);
+      const response = await fetch("http://localhost:3000/api/activities", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+        },
+        body: JSON.stringify(activityData),
+      });
+      
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || "Failed to add activity.");
+      }
+      
+      // Refresh activities after adding a new one
+      await fetchActivities();
+    } catch (error) {
+      console.error("Error adding activity:", error);
+      throw error; // Re-throw to be handled by the modal
+    }
+  };
 
   // Get unique activity types for filter dropdown
   const activityTypes = [...new Set(activities.map(a => a.activity_type))];
@@ -170,7 +225,20 @@ function Activities() {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Employee Activities</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-gray-800">Employee Activities</h1>
+          
+          {/* Add Activity Button (visible on mobile/when not in sidebar) */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Activity
+          </button>
+        </div>
         
         {/* Controls row */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-3 md:space-y-0">
@@ -234,12 +302,24 @@ function Activities() {
           <p className="mt-1 text-sm text-gray-500">
             {filter ? `No ${filter} activities found.` : "No activities to display."}
           </p>
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>
+              Add Activity
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
           {/* Timeline */}
           <div className="border-l-2 border-indigo-200 ml-3 space-y-6 pl-8 relative">
-            {filteredActivities.map((activity, index) => (
+            {filteredActivities.map((activity) => (
               <div key={activity.id} className="relative">
                 {/* Timeline dot */}
                 <div className="absolute -left-[42px] mt-1.5 w-5 h-5 rounded-full bg-indigo-500 border-4 border-white shadow"></div>
@@ -276,6 +356,13 @@ function Activities() {
           </div>
         </div>
       )}
+
+      {/* Activity Modal */}
+      <ActivityModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddActivity}
+      />
     </div>
   );
 }

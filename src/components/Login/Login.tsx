@@ -202,8 +202,9 @@ const Login = () => {
       }
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : "An unexpected error occurred"
+        "An unexpected error occurred, please try again later."
       );
+      console.error("Error:", error);
     }
   };
 
