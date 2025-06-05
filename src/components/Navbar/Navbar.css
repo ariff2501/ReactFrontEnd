@@ -1,43 +1,168 @@
-.navbar {
-    background-color: #2563eb;
-    padding: 1rem;
+label,
+button {
+    cursor: pointer;
+}
+/* input[type="checkbox"] {
+  display: none;
+} */
+
+/* :root {
+  --bg--primary: hsl(203, 7%, 92%);
+  --bg--active: hsla(203, 86%, 93%, 0.7);
+  --bg--hover: hsl(200, 7%, 84%);
+  --bg--focus: hsl(203, 100%, 100%);
+  --gray--primary: hsl(200, 10%, 50%);
+  --gray--secondary: hsl(200, 14%, 30%);
+
+  --dark--primary: hsl(203, 13%, 14%);
+  --dark--secondary: hsl(203, 4%, 29%);
+
+  --accent--primary: hsl(206, 90%, 56%);
+  --accent--secondary: hsl(206, 79%, 58%);
+
+  --expanded: 16.875rem;
+  --collapsed: 3.25rem;
+  --svg: 1.125rem;
+  --item: 2.25rem;
+  --brad-outer: 0.75rem;
+  --frame-space: 0.5rem;
+  --brad-inner: calc(var(--brad-outer) - var(--frame-space));
+}
+
+nav {
+  background: var(--bg--primary);
+  display: flex;
+  flex-flow: column;
+  min-width: var(--collapsed);
+  border-radius: var(--brad-outer);
+  flex: 0 0 auto;
+  transition: flex-basis 300ms ease-out;
+  will-change: flex-basis;
+  padding: var(--frame-space);
+  box-shadow: 0 3px 5px #1233, 0 5px 17px #0003;
+}
+
+.vertical-sidebar :checked ~ nav {
+  flex-basis: var(--expanded) ;
+}
+
+.vertical-sidebar :not(:checked) ~ nav {
+  flex-basis: var(--collapsed) ;
+}
+
+header {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.sidebar__toggle-container {
+  block-size: var(--item);
+  display: flex;
+  justify-content: end;
+}
+
+.nav__toggle {
+  block-size: 100%;
+  background: none;
+  transition: all 233ms ease-in;
+  border-radius: var(--brad-inner);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  overflow: hidden;
+}
+
+.toggle--icons {
+  block-size: inherit;
+  aspect-ratio: 1;
+  display: inline-grid;
+  place-content: center;
+  grid-template-areas: "svg";
+  z-index: 10;
+}
+
+.toggle-svg-icon {
+  grid-area: svg;
+  fill: var(--gray--primary);
+  transition: fill 233ms ease-in;
+}
+
+.nav__toggle:hover {
+  outline: 2px solid var(--accent--primary);
+}
+
+.toggle--icons:hover .toggle-svg-icon {
+  fill: var(--dark--primary);
+}
+
+.sidebar__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-flow: column;
+  gap: 0.125rem;
+  overflow: hidden;
+}
+.sidebar__list:has(.sidebar__link):hover .sidebar__item--heading {
+  color: var(--gray--secondary);
+}
+
+.sidebar__link {
+  display: flex;
+  text-decoration: none;
+  block-size: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  outline: 2px solid transparent;
+  border-radius: inherit;
+}
+
+.sidebar__wrapper {
+  --list-gap: 0.5rem;
+  display: flex;
+  flex-flow: column;
+  gap: var(--list-gap);
+}
+
+.sidebar__item {
+  block-size: var(--item);
+  border-radius: var(--brad-inner);
+}
+
+.item--heading {
+  display: flex;
+  align-items: end;
+}
+
+.text {
+  pointer-events: none;
+  color: var(--gray--secondary);
+  font-size: 0.875em;
+  font-weight: 500;
+  transition: color 266ms ease-out;
+}
+
+.sidebar__link:hover {
+  background: var(--bg--hover);
+  .icon svg {
+      fill: var(--accent--primary);
   }
-  
-  .navbar ul {
-    display: flex;
-    justify-content: space-around;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  .text {
+      color: var(--dark--primary);
   }
-  
-  .navbar li {
-    margin: 0;
-    padding: 0;
+}
+
+.sidebar__link:focus {
+  outline: 2px solid var(--accent--secondary);
+  outline-offset: -2px;
+  background: var(--bg--focus);
+  .icon svg {
+      fill: var(--accent--primary);
   }
-  
-  .navbar a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .navbar a:hover {
-    color: #d1d5db;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5);
-  }
-  
-  @media (max-width: 640px) {
-    .navbar ul {
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .navbar li {
-      margin-bottom: 0.5rem;
-    }
-  }
-  
+}
+
+.sidebar__link:active {
+  background-color: var(--bg--active);
+} */
