@@ -90,13 +90,13 @@
 
 //   useEffect(() => {
 //     const fetchProfile = async () => {
-//       const userId = localStorage.getItem("userId");  
+//       const userId = localStorage.getItem("userId");
 //       // console.log("Fetching profile for user ID:", userId);
 //       if (!userId) {
 //         setError("User ID not found. Please log in again.");
 //         return;
 //       }
-        
+
 //         try {
 //           const response = await fetch(`http://localhost:3000/api/employees?user_id=${userId}`, {
 //             method: "GET",
@@ -118,7 +118,7 @@
 //             // console.error("Failed to profile:", error);
 //           setError(error instanceof Error ? error.message : "Failed to fetch profile. Please try again later.");
 //         }
-      
+
 //     };
 
 //     fetchProfile();
@@ -130,7 +130,7 @@
 //   if (!profile) {
 //     return <div className={`alert `}>Loading...</div>;
 //   }
-  
+
 //   return (
 //     <Container>
 //       <ProfileImageWrapper>
@@ -175,8 +175,20 @@
 
 // export default Profile;
 
-import { useState,ReactNode } from 'react';
-import { Calendar, Mail, Phone, Building, Users, Briefcase, Clock, Edit, Save, X } from 'lucide-react';
+import { useState, ReactNode, useEffect } from "react";
+import {
+  Calendar,
+  Mail,
+  Phone,
+  Building,
+  Users,
+  Briefcase,
+  Clock,
+  Edit,
+  Save,
+  X,
+} from "lucide-react";
+import { set } from "date-fns";
 // Define types for our data
 interface Employee {
   id: string;
@@ -204,60 +216,76 @@ interface InfoItemProps {
   children: ReactNode;
 }
 
+export default function Profile() {
+  // Sample employee data
+  const sampleEmployee: Employee = {
+    id: "1",
+    name: "John Doe",
+    avatar: "https://via.placeholder.com/150",
+    position: "Software Engineer",
+    department: "Engineering",
+    email: "ariff" + "@example.com",
+    phone: "+1234567890",
+    startDate: "2022-01-01",
+    manager: "Jane Smith",
+    bio: "Experienced software engineer with a passion for building scalable applications.",
+    skills: ["JavaScript", "React", "Node.js"],
+    projects: ["Project A", "Project B", "Project C"],
+  };
 
-export default function EmployeeProfile({ employee = {
-  id: '1',
-  name: 'Alex Johnson',
-  avatar: '/api/placeholder/150/150',
-  position: 'Senior Software Engineer',
-  department: 'Engineering',
-  email: 'alex.johnson@company.com',
-  phone: '+1 (555) 123-4567',
-  startDate: '2020-03-15',
-  manager: 'Sarah Williams',
-  bio: 'Experienced software engineer with expertise in React, Node.js, and cloud infrastructure. Passionate about creating elegant solutions to complex problems.',
-  skills: ['React', 'JavaScript', 'TypeScript', 'Node.js', 'AWS'],
-  projects: ['Customer Portal Redesign', 'API Modernization', 'Mobile App Development']
-} }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedEmployee, setEditedEmployee] = useState(employee);
-  
-  const handleChange = (e : React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+  const [editedEmployee, setEditedEmployee] = useState<Employee>(
+    {} as Employee
+  );
+  const [employee, setEmployee] = useState<Employee>({} as Employee);
+
+  useEffect(() => {
+    // Simulate fetching employee data from an API
+    // In a real application, you would replace this with an API call
+    // For now, we'll just use the sample data defined above
+
+    setEmployee(sampleEmployee);
+    setEditedEmployee(sampleEmployee);
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setEditedEmployee(prev => ({
+    setEditedEmployee((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
+
   const handleSkillChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const skills = e.target.value.split(',').map(skill => skill.trim());
-    setEditedEmployee(prev => ({
+    const skills = e.target.value.split(",").map((skill) => skill.trim());
+    setEditedEmployee((prev) => ({
       ...prev,
-      skills
+      skills,
     }));
   };
-  
-  const handleProjectChange = (e :  React.ChangeEvent<HTMLTextAreaElement>) => {
-    const projects = e.target.value.split(',').map(project => project.trim());
-    setEditedEmployee(prev => ({
+
+  const handleProjectChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const projects = e.target.value.split(",").map((project) => project.trim());
+    setEditedEmployee((prev) => ({
       ...prev,
-      projects
+      projects,
     }));
   };
-  
+
   const handleSave = () => {
     // Here you would typically send the updated data to your server
     // For now, we'll just update the local state
-    employee = editedEmployee;
+    setEmployee(editedEmployee);
     setIsEditing(false);
   };
-  
+
   const handleCancel = () => {
     setEditedEmployee(employee);
     setIsEditing(false);
   };
-  
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
       {/* Header */}
@@ -402,7 +430,7 @@ export default function EmployeeProfile({ employee = {
               
               <section>
                 <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">Skills</h3>
-                <div className="mt-3">
+                {/* <div className="mt-3">
                   {isEditing ? 
                     <div>
                       <textarea 
@@ -422,12 +450,12 @@ export default function EmployeeProfile({ employee = {
                       ))}
                     </div>
                   }
-                </div>
+                </div> */}
               </section>
               
               <section>
                 <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">Projects</h3>
-                <div className="mt-3">
+                {/* <div className="mt-3">
                   {isEditing ? 
                     <div>
                       <textarea 
@@ -445,7 +473,7 @@ export default function EmployeeProfile({ employee = {
                       ))}
                     </ul>
                   }
-                </div>
+                </div> */}
               </section>
             </div>
           </div>
@@ -456,12 +484,10 @@ export default function EmployeeProfile({ employee = {
 }
 
 // Helper component for displaying info items
-function InfoItem({ icon, label, children } : InfoItemProps) {
+function InfoItem({ icon, label, children }: InfoItemProps) {
   return (
     <div className="flex items-start">
-      <div className="text-blue-500 mr-2 mt-1">
-        {icon}
-      </div>
+      <div className="text-blue-500 mr-2 mt-1">{icon}</div>
       <div>
         <p className="text-xs text-gray-500">{label}</p>
         <div className="text-gray-700">{children}</div>

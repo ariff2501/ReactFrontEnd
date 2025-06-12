@@ -14,7 +14,7 @@ function LogoutButton() {
         localStorage.removeItem("userData");
   
         // Redirect to login page using navigate
-        navigate('/login');
+        navigate("/login", { replace: true });
       } catch (error) {
         console.error("Error during logout:", error);
         setError("Logout failed");
