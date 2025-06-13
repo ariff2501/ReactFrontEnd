@@ -10,6 +10,7 @@ import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Activities from "./components/Activities/Activities";
 import AuthGuard from "./components/AuthGuard/AuthGuard";
+import ActivityCalendar from "./components/ActivityCalendar/ActivityCalendar";
 
 function App() {
   return (
@@ -27,12 +28,14 @@ function App() {
         >
           {/* Nested routes inside dashboard */}
           <Route index element={<Home />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<Profile role="hr"/>} />
           <Route path="activities" element={<Activities />} />
+          <Route path="activityCalendar" element={<ActivityCalendar/>} />
         </Route>
 
         {/* Login and Register routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         {/* You can add other non-dashboard routes globally if needed */}
       </Routes>
     </Router>
