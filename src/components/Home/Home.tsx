@@ -130,71 +130,71 @@ export default function EmployeeAvailability() {
         // Get current date in dd/MM/yyyy format
         const today = new Date();
         const formatDateString = (date: Date) => {
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           return `${day}/${month}/${year}`;
         };
 
-        // Create tomorrow's date
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        // // Create tomorrow's date
+        // const tomorrow = new Date(today);
+        // tomorrow.setDate(tomorrow.getDate() + 1);
 
-        // Create dates for next week
-        const nextWeek = new Date(today);
-        nextWeek.setDate(nextWeek.getDate() + 7);
+        // // Create dates for next week
+        // const nextWeek = new Date(today);
+        // nextWeek.setDate(nextWeek.getDate() + 7);
 
-        const nextWeekPlus1 = new Date(nextWeek);
-        nextWeekPlus1.setDate(nextWeekPlus1.getDate() + 1);
+        // const nextWeekPlus1 = new Date(nextWeek);
+        // nextWeekPlus1.setDate(nextWeekPlus1.getDate() + 1);
 
-        const nextWeekPlus2 = new Date(nextWeek);
-        nextWeekPlus2.setDate(nextWeekPlus2.getDate() + 2);
+        // const nextWeekPlus2 = new Date(nextWeek);
+        // nextWeekPlus2.setDate(nextWeekPlus2.getDate() + 2);
 
-        const nextWeekPlus5 = new Date(nextWeek);
-        nextWeekPlus5.setDate(nextWeekPlus5.getDate() + 5);
+        // const nextWeekPlus5 = new Date(nextWeek);
+        // nextWeekPlus5.setDate(nextWeekPlus5.getDate() + 5);
 
         // Mock data with current dates
-        const mockActivities: Activity[] = [
-          {
-            id: 1,
-            employee_id: 101,
-            activity_type: "Remote Work",
-            start_date: formatDateString(today),
-            end_date: formatDateString(today),
-            description: "Working from home"
-          },
-          {
-            id: 2,
-            employee_id: 101,
-            activity_type: "Vacation",
-            start_date: formatDateString(tomorrow),
-            end_date: formatDateString(nextWeek),
-            description: "Annual leave"
-          },
-          {
-            id: 3,
-            employee_id: 101,
-            activity_type: "Training",
-            start_date: formatDateString(nextWeekPlus1),
-            end_date: formatDateString(nextWeekPlus2),
-            description: "Technical certification"
-          },
-          {
-            id: 4,
-            employee_id: 101,
-            activity_type: "Sick Leave",
-            start_date: formatDateString(nextWeekPlus2),
-            end_date: formatDateString(nextWeekPlus2)
-          },
-          {
-            id: 5,
-            employee_id: 101,
-            activity_type: "Remote Work",
-            start_date: formatDateString(nextWeekPlus5),
-            end_date: formatDateString(nextWeekPlus5),
-            description: "Client site visit"
-          }
-        ];
+        // const mockActivities: Activity[] = [
+        //   {
+        //     id: 1,
+        //     employee_id: 101,
+        //     activity_type: "Remote Work",
+        //     start_date: formatDateString(today),
+        //     end_date: formatDateString(today),
+        //     description: "Working from home"
+        //   },
+        //   {
+        //     id: 2,
+        //     employee_id: 101,
+        //     activity_type: "Vacation",
+        //     start_date: formatDateString(tomorrow),
+        //     end_date: formatDateString(nextWeek),
+        //     description: "Annual leave"
+        //   },
+        //   {
+        //     id: 3,
+        //     employee_id: 101,
+        //     activity_type: "Training",
+        //     start_date: formatDateString(nextWeekPlus1),
+        //     end_date: formatDateString(nextWeekPlus2),
+        //     description: "Technical certification"
+        //   },
+        //   {
+        //     id: 4,
+        //     employee_id: 101,
+        //     activity_type: "Sick Leave",
+        //     start_date: formatDateString(nextWeekPlus2),
+        //     end_date: formatDateString(nextWeekPlus2)
+        //   },
+        //   {
+        //     id: 5,
+        //     employee_id: 101,
+        //     activity_type: "Remote Work",
+        //     start_date: formatDateString(nextWeekPlus5),
+        //     end_date: formatDateString(nextWeekPlus5),
+        //     description: "Client site visit"
+        //   }
+        // ];
 
         // setActivities(mockActivities);
         setLoading(false);
@@ -202,6 +202,7 @@ export default function EmployeeAvailability() {
         // Initialize countdown
         updateCountdown(new Date());
       } catch (err) {
+        console.error("Error fetching activities:", err);
         setError("Failed to load upcoming activities");
         setLoading(false);
       }
