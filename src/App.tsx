@@ -10,9 +10,11 @@ import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Activities from "./components/Activities/Activities";
 import AuthGuard from "./components/AuthGuard/AuthGuard";
+import RoleGuard from "./components/RoleGuard/RoleGuard";
 import ActivityCalendar from "./components/ActivityCalendar/ActivityCalendar";
 
 function App() {
+
   return (
     <Router>
       <Routes>
@@ -28,9 +30,16 @@ function App() {
         >
           {/* Nested routes inside dashboard */}
           <Route index element={<Home />} />
-          <Route path="profile" element={<Profile role="hr"/>} />
-          <Route path="activities" element={<Activities />} />
-          <Route path="activityCalendar" element={<ActivityCalendar/>} />
+          <Route path="profile" element={<Profile/>} />
+          {/* RoleGuard for Activities route, only accessible by admin */}
+          <Route
+            element={
+              <RoleGuard allowedRoles={["admin"]} />
+            }
+          >
+            <Route path="activities" element={<Activities />} />
+          </Route>
+          <Route path="activityCalendar" element={<ActivityCalendar />} />
         </Route>
 
         {/* Login and Register routes */}

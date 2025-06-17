@@ -3,9 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 
 interface NavbarProps {
   onAddActivity?: () => void;
+  userRole: string; // Optional role prop if needed for future use
 }
 
-function Navbar({ onAddActivity }: NavbarProps) {
+function Navbar({ onAddActivity, userRole }: NavbarProps) {
   const location = useLocation();
 
   const isActive = (path: string): boolean => {
@@ -20,9 +21,24 @@ function Navbar({ onAddActivity }: NavbarProps) {
       label: "Activities",
       icon: "clipboard",
       hasAction: true,
+      roleRequired:"admin"
     },
     { path: "/activityCalendar", label: "Calendar View", icon: "calendar" },
   ];
+
+  // Filter nav items based on user role
+  const authorizedNavItems = navItems.filter(item => {
+    // If no role required, show to everyone
+    if (!item.roleRequired) return true;
+    
+    // If roleRequired is an array, check if user's role is in the array
+    if (Array.isArray(item.roleRequired)) {
+      return item.roleRequired.includes(userRole);
+    }
+    
+    // If roleRequired is a string, check if it matches user's role
+    return item.roleRequired === userRole;
+  });
 
   return (
     <div className="w-full">
@@ -32,7 +48,7 @@ function Navbar({ onAddActivity }: NavbarProps) {
 
       <nav>
         <ul className="space-y-2">
-          {navItems.map((item) => (
+          {authorizedNavItems.map((item) => (
             <li key={item.path}>
               <div className="flex flex-col">
                 <Link

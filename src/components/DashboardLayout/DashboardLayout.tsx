@@ -58,7 +58,7 @@
 
 // export default DashboardLayout;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import LogoutButton from "../Buttons/LogoutButton";
@@ -67,7 +67,12 @@ function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState("");
 
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    setUserRole(userData.role || "");
+  }, []);
   // Handle "Add Activity" button from navbar
   const handleAddActivity = () => {
     // If we're already on the activities page, we'll let the Activities component handle this
@@ -97,7 +102,7 @@ function DashboardLayout() {
       }`}>
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-gray-200">
-            <Navbar onAddActivity={handleAddActivity} />
+            <Navbar onAddActivity={handleAddActivity} userRole={userRole}/>
           </div>
         </div>
       </div>

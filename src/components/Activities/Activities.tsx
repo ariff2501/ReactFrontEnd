@@ -95,7 +95,7 @@ function Activities() {
   // Handle adding a new activity
   const handleAddActivity = async (activityData: any) => {
     try {
-      console.log("Adding activity with data:", activityData);
+      // console.log("Adding activity with data:", activityData);
       const response = await fetch("http://localhost:3000/api/activities", {
         method: "POST",
         headers: {
@@ -153,10 +153,10 @@ function Activities() {
   const openActivityModal = (activityId: any) => {
     setSelectedActivityId(activityId);
     setIsDetailsActivityModalOpen(true);
-    console.log(
-      "Opening details modal for activity:",
-      isDetailsActivityModalOpen
-    );
+    // console.log(
+    //   "Opening details modal for activity:",
+    //   isDetailsActivityModalOpen
+    // );
   };
 
   if (error) {

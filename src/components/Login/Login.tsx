@@ -40,6 +40,7 @@ const Login = () => {
         setSuccess(true);
         localStorage.setItem("authToken", jsonResponse.token);
         localStorage.setItem("userId", jsonResponse.user.id);
+        localStorage.setItem('user', JSON.stringify(jsonResponse.user));
 
         // Get the redirect location from state, or default to home
         const from = location.state?.from?.pathname || "/";

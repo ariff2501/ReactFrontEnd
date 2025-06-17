@@ -68,10 +68,10 @@ interface Employee {
   }[];
 }
 
-interface EmployeeInfoProps {
-  employee?: Employee;
-  role: "hr" | "employee"; // Role-based view
-}
+// interface EmployeeInfoProps {
+//   employee?: Employee;
+//   role: "hr" | "employee"; // Role-based view
+// }
 
 // Define type for the InfoItem component
 interface InfoItemProps {
@@ -80,7 +80,7 @@ interface InfoItemProps {
   children: ReactNode;
 }
 
-export default function Profile({ role = "employee" }: EmployeeInfoProps) {
+export default function Profile() {
   // Sample employee data focused on HR information
   const sampleEmployee: Employee = {
     id: "1",
@@ -141,10 +141,12 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedEmployee, setEditedEmployee] = useState<Employee>({} as Employee);
   const [employee, setEmployee] = useState<Employee>({} as Employee);
-  const [showSensitiveInfo, setShowSensitiveInfo] = useState(role === "hr");
+  const [showSensitiveInfo, setShowSensitiveInfo] = useState(false);
+  const [role, setRole] = useState("");
 
   useEffect(() => {
-    // Simulate fetching employee data from an API
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setRole(user.role || "employee");
     setEmployee(sampleEmployee);
     setEditedEmployee(sampleEmployee);
   }, []);
@@ -230,7 +232,7 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
 
   // Determine which fields can be edited based on role
   const canEdit = (fieldName: string) => {
-    if (role === "hr") return true;
+    if (role === "admin") return true;
     
     // Fields that employees can edit themselves
     const employeeEditableFields = [
@@ -247,20 +249,20 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
       {/* Header with role indicator */}
       <div className="bg-gray-100 px-6 py-4 flex justify-between items-center border-b border-gray-200">
         <div className="flex items-center">
-          <div className={`p-2 rounded-md mr-3 ${role === "hr" ? "bg-purple-100" : "bg-blue-100"}`}>
-            <User size={20} className={role === "hr" ? "text-purple-700" : "text-blue-700"} />
+          <div className={`p-2 rounded-md mr-3 ${role === "admin" ? "bg-purple-100" : "bg-blue-100"}`}>
+            <User size={20} className={role === "admin" ? "text-purple-700" : "text-blue-700"} />
           </div>
           <div>
             <h1 className="text-xl font-medium text-gray-800">Employee Information</h1>
             <div className="flex items-center text-sm">
               <span className="text-gray-500 mr-2">Viewing as:</span>
-              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${role === "hr" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
-                {role === "hr" ? "HR Administrator" : "Employee"}
+              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
+                {role === "admin" ? "HR Administrator" : "Employee"}
               </span>
               
               {/* Role toggle (demo purposes) */}
               <button 
-                onClick={() => window.location.search = role === "hr" ? "?role=employee" : "?role=hr"}
+                onClick={() => setRole(role === "admin" ? "employee" : "admin")}
                 className="ml-2 text-xs text-gray-500 underline hover:text-gray-700"
               >
                 Switch View
@@ -274,12 +276,12 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
           <button 
             onClick={() => setIsEditing(true)}
             className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              role === "hr" 
+              role === "admin" 
               ? "bg-purple-600 text-white hover:bg-purple-700" 
               : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           >
-            <Edit size={16} className="mr-1.5" /> {role === "hr" ? "Edit Information" : "Edit My Details"}
+            <Edit size={16} className="mr-1.5" /> {role === "admin" ? "Edit Information" : "Edit My Details"}
           </button>
         ) : (
           <div className="flex space-x-2">
@@ -526,7 +528,7 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
                   </InfoItem>
                   
                   {/* Probation date only visible to HR */}
-                  {(role === "hr" || role === "employee") && (
+                  {(role === "admin" || role === "employee") && (
                     <InfoItem icon={<Calendar size={16} />} label="Probation End Date">
                       {isEditing && canEdit("probationEndDate") ? 
                         <input 
@@ -571,7 +573,7 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
                 </h3>
                 
                 {/* Salary info - conditional display */}
-                {(role === "hr" || showSensitiveInfo) ? (
+                {(role === "admin" || showSensitiveInfo) ? (
                   <div className="space-y-1 mb-4">
                     <div className="flex justify-between items-baseline">
                       <span className="text-sm text-gray-500">Current Salary:</span>
@@ -648,7 +650,7 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
               </section>
               
               {/* Documents & Compliance - HR only or limited view for employee */}
-              {role === "hr" ? (
+              {role === "admin" ? (
                 <section className="bg-white rounded-lg border border-gray-200 p-4">
                   <h3 className="text-md font-semibold text-gray-700 border-b pb-2 mb-3 flex items-center">
                     <FileText size={16} className="mr-1.5 text-blue-600" />
@@ -725,7 +727,7 @@ export default function Profile({ role = "employee" }: EmployeeInfoProps) {
               )}
               
               {/* Performance Review section - HR only */}
-              {role === "hr" && employee.performanceReviews && (
+              {role === "admin" && employee.performanceReviews && (
                 <section className="bg-white rounded-lg border border-gray-200 p-4 lg:col-span-2">
                   <h3 className="text-md font-semibold text-gray-700 border-b pb-2 mb-3 flex items-center">
                     <Activity size={16} className="mr-1.5 text-blue-600" />
